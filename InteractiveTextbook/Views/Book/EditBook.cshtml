@@ -1,0 +1,91 @@
+﻿@model InteractiveTextbook.Models.ViewModels.BookViewModel.EditBookViewModel
+@using InteractiveTextbook.Services
+@inject IBookService _bookService
+@{
+    ViewData["Title"] = "Edytuj książke";
+}
+
+<form method="post" asp-controller="Book" asp-action="EditThisBook">
+    <div class="form-group">
+        <label for="id">Id</label>
+        <input asp-for="Id" class="form-control" type="text" id="id" placeholder="Id" name="id" readonly />
+        <span asp-validation-for="Id" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="Title">Tytuł</label>
+        <input asp-for="Title" class="form-control" type="text" id="Title" placeholder="Tytuł" name="Title" value="@Model.Title" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="Description">Opis</label>
+        <input asp-for="Description" class="form-control" type="text" id="Description" placeholder="Opis" name="Description" value="@Model.Description" />
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="Text">Tekst</label>
+        <textarea asp-for="Text" class="form-control" type="text" id="Text" style="height:300px;" placeholder="Tekst" name="Text" value="@Model.Text"></textarea>
+        <span asp-validation-for="Text" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="InteractiveElementType">Interaktywny element</label>
+        <select id="Type" asp-for="InteractiveElementType" class="form-control" asp-items="@(await _bookService.populateInteractiveElementList())">
+            <option value="">Wybierz typ użytkownika</option>
+        </select>
+        <span asp-validation-for="InteractiveElementType" class="text-danger"></span>
+    </div>
+
+    <div id="media" class="form-group" style="display:none;">
+        <label asp-for="URL">Link do filmu</label>
+        <input asp-for="URL" class="form-control" value="@Model.URL" />
+        <span asp-validation-for="URL" class="text-danger"></span>
+    </div>
+
+    <div class="container flex-column gap-3" id="quiz" style="display:none;">
+        <label for="Question">Pytanie</label>
+        <input asp-for="QuizQuestion" type="text" class="form-control" />
+
+        <label for="AnsA">A</label>
+        <input asp-for="AnsA" type="text" class="form-control" />
+
+        <label for="AnsB">B</label>
+        <input asp-for="AnsB" type="text" class="form-control" />
+
+        <label for="AnsC">C</label>
+        <input asp-for="AnsC" type="text" class="form-control" />
+
+        <label for="AnsD">D</label>
+        <input asp-for="AnsD" type="text" class="form-control" />
+
+        <label for="CorrectAnswer">Poprawna odpowiedź</label>
+        <input asp-for="CorrectAnswer" type="text" class="form-control" />
+    </div>
+
+    <div class="text-center m-5">
+        <a asp-action="Index" class="btn btn-outline-danger"><i class="fa-solid fa-arrow-left me-1"></i>Cofnij</a>
+        <button type="submit" class="btn btn-success"><i class="fa-solid fa-pen me-2"></i>Edytuj</button>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const userTypeSelect = document.getElementById('Type');
+            const quiz = document.getElementById('quiz');
+            const media = document.getElementById('media');
+
+            userTypeSelect.addEventListener('change', function () {
+                const selectedValue = userTypeSelect.value;
+                if (selectedValue === 'Media') {
+                    media.style.display = 'block';
+                    quiz.style.display = 'none';
+                } else if (selectedValue === 'Quiz') {
+                    media.style.display = 'none';
+                    quiz.style.display = 'block';
+                } else {
+                    media.style.display = 'none';
+                    quiz.style.display = 'none';
+                }
+            });
+        });
+    </script>
+}

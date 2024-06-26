@@ -1,0 +1,95 @@
+﻿@model InteractiveTextbook.Models.ViewModels.UserViewModel.EditUserViewModel
+@using InteractiveTextbook.Services
+@inject IUserService _userService
+@{
+    ViewData["Title"] = "Edytuj dane osoby";
+}
+
+<form method="post" asp-controller="User" asp-action="EditThisUser">
+    <div class="form-group">
+        <label for="id">Id</label>
+        <input asp-for="Id" class="form-control" type="text" id="id" placeholder="Id" name="id" readonly />
+        <span asp-validation-for="Id" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="FirstName">Imie</label>
+        <input asp-for="FirstName" class="form-control" type="text" id="FirstName" placeholder="Imie" name="FirstName" value="@Model.FirstName" />
+        <span asp-validation-for="FirstName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="LastName">Nazwisko</label>
+        <input asp-for="LastName" class="form-control" type="text" id="LastName" placeholder="Nazwisko" name="LastName" value="@Model.LastName" />
+        <span asp-validation-for="LastName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="Email">Email</label>
+        <input asp-for="Email" class="form-control" type="text" id="Email" placeholder="Email" name="Email" value="@Model.Email" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="Password">Hasło</label>
+        <input asp-for="Password" class="form-control" type="password" id="Email" placeholder="Hasło" name="Password" value="@Model.Password" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Type">Typ użytkownika</label>
+        <select asp-for="Type" class="form-control" asp-items="@(await _userService.populateUserTypeList())">
+            <option value="">Wybierz typ użytkownika</option>
+        </select>
+        <span asp-validation-for="Type" class="text-danger"></span>
+    </div>
+
+    <div id="teacherFields" class="form-group" style="display:none;">
+        <label asp-for="SchoolSubject">Przedmiot szkolny</label>
+        <input asp-for="SchoolSubject" class="form-control" value="@Model.SchoolSubject" />
+        <span asp-validation-for="SchoolSubject" class="text-danger"></span>
+    </div>
+
+    <div id="studentFields" class="form-group" style="display:none;">
+        <label asp-for="Class">Klasa</label>
+        <input asp-for="Class" class="form-control" value="@Model.Class"/>
+        <span asp-validation-for="Class" class="text-danger"></span>
+    </div>
+
+    <div class="text-center m-5">
+        <a asp-action="Index" class="btn btn-outline-danger"><i class="fa-solid fa-arrow-left me-1"></i>Cofnij</a>
+        <button type="submit" class="btn btn-success"><i class="fa-solid fa-pen me-2"></i>Edytuj</button>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const userTypeSelect = document.getElementById('Type');
+            const teacherFields = document.getElementById('teacherFields');
+            const studentFields = document.getElementById('studentFields');
+
+            userTypeSelect.addEventListener('change', function () {
+                const selectedValue = userTypeSelect.value;
+                if (selectedValue === 'Teacher') {
+                    teacherFields.style.display = 'block';
+                    studentFields.style.display = 'none';
+                } else if (selectedValue === 'Student') {
+                    teacherFields.style.display = 'none';
+                    studentFields.style.display = 'block';
+                } else {
+                    teacherFields.style.display = 'none';
+                    studentFields.style.display = 'none';
+                }
+            });
+
+            // Initial state based on pre-selected value
+            const initialUserType = userTypeSelect.value;
+            if (initialUserType === 'Teacher') {
+                teacherFields.style.display = 'block';
+                studentFields.style.display = 'none';
+            } else if (initialUserType === 'Student') {
+                teacherFields.style.display = 'none';
+                studentFields.style.display = 'block';
+            } else {
+                teacherFields.style.display = 'none';
+                studentFields.style.display = 'none';
+            }
+        });
+    </script>
+}

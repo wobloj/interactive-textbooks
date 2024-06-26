@@ -1,0 +1,44 @@
+﻿@model InteractiveTextbook.Models.ViewModels.BookViewModel.GetBookViewModel
+@{
+    ViewData["Title"] = "Książka";
+}
+
+<form method="post" asp-controller="Book" asp-action="GetBook">
+    <div class="form-group">
+        <h1>@Model.Title</h1>
+    </div>
+    <div class="form-group">
+        <p>@Model.Description</p>
+    </div>
+    <div class="form-group">
+        <p>@Model.Text</p>
+    </div>
+    <br class="my-2" />
+    @if(Model.InteractiveElementType == InteractiveTextbook.Enums.InteractiveElementType.Media)
+    {
+        <div class="form-group d-flex justify-content-center">
+            <iframe src="@Model.Media.Replace("watch?v=", "embed/")" height="300" width="500" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+    }
+    @if (Model.InteractiveElementType == InteractiveTextbook.Enums.InteractiveElementType.Quiz)
+    {
+        <div class="d-flex flex-column justify-content-center align-content-center">
+            <h4 class="fw-bold text-center">@Model.Question</h4>
+            <br class="mx-3" />
+            <div class="row row-cols-2 justify-content-center gap-1">
+                <button class="btn btn-outline-dark p-3">@Model.AnsA</button>
+                <button class="btn btn-outline-dark p-3">@Model.AnsB</button>
+                <button class="btn btn-outline-dark p-3">@Model.AnsC</button>
+                <button class="btn btn-outline-dark p-3">@Model.AnsD</button>
+            </div>
+            <br class="mx-3" />
+            <div class="text-center m5">
+                <input class="btn btn-outline-success" type="submit" name="name" value="Sprawdź" />
+            </div>
+        </div>
+    }
+
+    <div class="text-center m-5">
+        <a asp-action="Index" class="btn btn-outline-danger"><i class="fa-solid fa-arrow-left me-1"></i>Cofnij</a>
+    </div>
+</form>

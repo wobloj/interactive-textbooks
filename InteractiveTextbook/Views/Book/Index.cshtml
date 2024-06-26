@@ -1,0 +1,54 @@
+﻿@model InteractiveTextbook.Models.ViewModels.BookViewModel.BookViewModel
+@{
+    ViewData["Title"] = "Książki";
+}
+
+@if (Model.Books.Any())
+{
+    <div class="text-center m-3 text-center">
+        <h1 class="display-3">Lista książek</h1>
+        <a class="btn btn-primary p-3" asp-controller="Book" asp-action="AddBook"><i class="fa-solid fa-plus me-3"></i>Dodaj nową książkę</a>
+    </div>
+    <table class="table table-hover">
+        <thead class="text-center">
+            <tr>
+                <th scope="col">Tytuł</th>
+                <th scope="col">Opis</th>
+                <th scope="col">Akcje</th>
+            </tr>
+        </thead>
+        <tbody class="text-center ">
+            @foreach (var item in Model.Books)
+            {
+                <tr>
+                    
+                    <th><a asp-route-id="@item.Id" asp-controller="Book" asp-action="GetBook">@item.Title</a></th>
+                    
+                    <th>@item.Description</th>
+                    <th>
+                        <div class="d-flex gap-1 justify-content-center">
+                            <form class=" float-left" method="post" asp-action="DeleteBook" asp-route-id="@item.Id">
+                                <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash me-2"></i>Usuń</button>
+                            </form>
+                            <a class="btn btn-warning float-right" asp-controller="Book" asp-action="EditBook"
+                               asp-route-id="@item.Id"
+                               asp-route-title="@item.Title"
+                               asp-route-description="@item.Description"
+                               asp-route-category="@item.Text"
+                               asp-route-pages="@item.InteractiveElement">
+                                <i class="fa-solid fa-pen me-2"></i>Edytuj
+                            </a>
+                        </div>
+                    </th>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="text-center">
+        <p class="display-4">Dodaj książkę</p>
+        <a class="btn btn-primary" asp-controller="Book" asp-action="AddBook"><i class="fa-solid fa-plus me-1"></i>Dodaj</a>
+    </div>
+}
